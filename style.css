@@ -12,16 +12,6 @@ body {
     line-height: 1.6;
 }
 
-/* Conteneur principal centré */
-.container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
 /* Titre */
 h1 {
     text-align: center;
