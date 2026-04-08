@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $nom            = trim($_POST['nom'] ?? '');
 $prenom         = trim($_POST['prenom'] ?? '');
 $date_naissance = $_POST['date_naissance'] ?? '';
-// $identifiant  → on va le générer nous-mêmes, on ignore ce qui vient du formulaire
 
 // 4. Validation minimale côté serveur
 $erreurs = [];
@@ -71,7 +70,6 @@ if (!empty($_FILES['photo']['name'])) {
     }
 }
 
-// ====================== ENREGISTREMENT FIABLE ======================
 try {
     // 1. Insertion temporaire sans identifiant
     $sql_insert = "INSERT INTO personne (nom, prenom, date_naissance, photo_path) 
