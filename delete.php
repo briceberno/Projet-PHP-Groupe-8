@@ -29,8 +29,8 @@ try {
 
     // Message de succès
     echo "<h2>Suppression réussie !</h2>";
-    echo "<p>La personne et sa photo (si elle existait) ont été supprimées.</p>";
-    echo '<p><a href="index.php">← Retour à la liste</a></p>';
+    echo "<p>La personne a été supprimée.</p>";
+    echo '<p><a href="liste.php">← Retour à la liste</a></p>';
 
 } catch (PDOException $e) {
     die("Erreur lors de la suppression : " . $e->getMessage());
