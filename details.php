@@ -2,18 +2,13 @@
 require_once 'config.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-if ($id <= 0) {
-    die("ID invalide.");
-}
+if ($id <= 0) die("ID invalide.");
 
 $stmt = $pdo->prepare("SELECT * FROM personne WHERE id = ?");
 $stmt->execute([$id]);
 $personne = $stmt->fetch();
 
-if (!$personne) {
-    die("Personne non trouvée.");
-}
+if (!$personne) die("Personne non trouvée.");
 ?>
 
 <!DOCTYPE html>
@@ -21,166 +16,173 @@ if (!$personne) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails - <?= htmlspecialchars($personne['identifiant']) ?></title>
+    <title>Carte d'Identité - <?= htmlspecialchars($personne['identifiant']) ?></title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .container {
-            max-width: 900px;
+        .id-card {
+            max-width: 850px;
             margin: 40px auto;
-            padding: 40px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border: 12px solid #c8102e; /* Rouge Burundi */
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            overflow: hidden;
+            position: relative;
         }
 
-        .header {
+        .id-header {
+            background: linear-gradient(90deg, #00a650, #c8102e);
+            color: white;
+            padding: 15px 25px;
             text-align: center;
-            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
         }
 
-        .photo-container {
+        .id-body {
+            display: flex;
+            padding: 25px;
+            gap: 30px;
+            background: #f8f8f8;
+        }
+
+        .left-side {
+            flex: 1;
+        }
+
+        .right-side {
+            width: 240px;
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        .photo-container img {
-            width: 220px;
-            height: 280px;
+        .photo {
+            width: 210px;
+            height: 260px;
             object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            border: 4px solid #f8f9fa;
+            border: 6px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background: white;
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
         }
 
-        .info-table th {
-            background: #f1f3f5;
-            color: #2c3e50;
-            padding: 16px 20px;
-            text-align: left;
-            width: 280px;
+        .info-label {
+            width: 160px;
             font-weight: 600;
-            border-bottom: 1px solid #dee2e6;
+            color: #c8102e;
         }
 
-        .info-table td {
-            padding: 16px 20px;
-            border-bottom: 1px solid #dee2e6;
-            color: #34495e;
+        .info-value {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .footer {
+            background: #c8102e;
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
         }
 
         .actions {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         .btn {
-            display: inline-block;
-            padding: 14px 28px;
+            padding: 12px 30px;
             margin: 0 10px;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-modifier {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-modifier:hover {
-            background: #2980b9;
-            transform: translateY(-3px);
-        }
-
-        .btn-retour {
-            background: #95a5a6;
-            color: white;
-        }
-
-        .btn-retour:hover {
-            background: #7f8c8d;
-            transform: translateY(-3px);
-        }
-
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .identifiant {
-            font-size: 1.3rem;
-            color: #27ae60;
             font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>Détails de la personne</h1>
-        <p class="identifiant"><?= htmlspecialchars($personne['identifiant']) ?></p>
+<div class="id-card">
+    <!-- En-tête -->
+    <div class="id-header">
+        BURUNDI<br>
+        <span style="font-size:1.1rem; letter-spacing:4px;">CARTE D'IDENTITÉ</span>
     </div>
 
-    <!-- Photo -->
-    <div class="photo-container">
-        <?php if (!empty($personne['photo_path'])): ?>
-            <img src="<?= htmlspecialchars($personne['photo_path']) ?>" alt="Photo passeport">
-        <?php else: ?>
-            <img src="https://via.placeholder.com/220x280?text=Pas+de+photo" alt="Pas de photo">
-        <?php endif; ?>
+    <div class="id-body">
+        <!-- Partie gauche -->
+        <div class="left-side">
+            <!-- Drapeau + puce -->
+            <div class="flag"></div>
+            <div class="chip"></div>
+
+            <div class="info-row">
+                <div class="info-label">Numéro d’identité :</div>
+                <div class="info-value"><strong><?= htmlspecialchars($personne['identifiant']) ?></strong></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Nom :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['nom']) ?></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Prénom :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['prenom']) ?></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Nom du père :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['nom_pere'] ?? 'Non renseigné') ?></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Nom de la mère :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['nom_mere'] ?? 'Non renseigné') ?></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Date de naissance :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['date_naissance']) ?></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Lieu de naissance :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['lieu_naissance']) ?></div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Genre :</div>
+                <div class="info-value"><?= htmlspecialchars($personne['genre']) ?></div>
+            </div>
+
+        </div>
+
+        <!-- Partie droite : Photo -->
+        <div class="right-side">
+            <?php if (!empty($personne['photo_path'])): ?>
+                <img src="<?= htmlspecialchars($personne['photo_path']) ?>" class="photo" alt="Photo">
+            <?php else: ?>
+                <img src="https://via.placeholder.com/210x260?text=Photo" class="photo" alt="Photo">
+            <?php endif; ?>
+        </div>
     </div>
 
-    <!-- Informations détaillées -->
-    <table class="info-table">
-        <tr>
-            <th>Nom</th>
-            <td><?= htmlspecialchars($personne['nom']) ?></td>
-        </tr>
-        <tr>
-            <th>Prénom</th>
-            <td><?= htmlspecialchars($personne['prenom']) ?></td>
-        </tr>
-        <tr>
-            <th>Genre</th>
-            <td><?= htmlspecialchars($personne['genre']) ?></td>
-        </tr>
-        <tr>
-            <th>Date de naissance</th>
-            <td><?= htmlspecialchars($personne['date_naissance']) ?></td>
-        </tr>
-        <tr>
-            <th>Lieu de naissance</th>
-            <td><?= htmlspecialchars($personne['lieu_naissance']) ?></td>
-        </tr>
-        <tr>
-            <th>Nom du père</th>
-            <td><?= htmlspecialchars($personne['nom_pere'] ?? 'Non renseigné') ?></td>
-        </tr>
-        <tr>
-            <th>Nom de la mère</th>
-            <td><?= htmlspecialchars($personne['nom_mere'] ?? 'Non renseigné') ?></td>
-        </tr>
-    </table>
-
-    <!-- Boutons d'action -->
-    <div class="actions">
-        <a href="edit.php?id=<?= $personne['id'] ?>" class="btn btn-modifier">
-            ✏️ Modifier les informations
-        </a>
-        <a href="liste.php" class="btn btn-retour">
-            ← Retour à la liste
-        </a>
+    <!-- Pied de carte -->
+    <div class="footer">
+        <div>Principal Général</div>
+        <div>Date de délivrance : <?= date('d/m/Y') ?></div>
+        <div>Signature du titulaire</div>
     </div>
+</div>
+
+<div class="actions">
+    <a href="edit.php?id=<?= $personne['id'] ?>" class="btn" style="background:#3498db;color:white;">✏️ Modifier</a>
+    <a href="liste.php" class="btn" style="background:#95a5a6;color:white;">← Retour à la liste</a>
 </div>
 
 </body>
